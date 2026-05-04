@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EL Resource Lair — Academic Vault</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Oswald:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* ============================================================
+       RETRO PALETTE & CONSTANTS
+    ============================================================ */
+    :root {
+      --cream:       #f5efe0;
+      --parchment:   #e8dcc8;
+      --tan:         #c9b99a;
+      --brown:       #7a5c3e;
+      --dark-brown:  #4a3220;
+      --black:       #1a110a;
+      --red:         #8b1a1a;
+      --gold:        #c8922a;
+      --gold-light:  #e8b84b;
+      --olive:       #5a6b3a;
+      --ink:         #2c2010;
+      --sidebar-w:   260px;
+      --transition:  0.3s ease;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Courier Prime', 'Courier New', monospace;
+      --font-special: 'Special Elite', 'Courier New', monospace;
+      --font-head:    'Oswald', sans-serif;
+      --font-mono:    'Roboto Mono', monospace;
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-body);
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%23f5efe0'/%3E%3Ccircle cx='1' cy='1' r='0.5' fill='%23c9b99a22'/%3E%3C/svg%3E");
+    }
+
+    /* NOISE TEXTURE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--parchment); }
+    ::-webkit-scrollbar-thumb { background: var(--brown); border: 2px solid var(--parchment); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--dark-brown); }
+
+    /* ============================================================
+       LAYOUT
+    ============================================================ */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ============================================================
+       SIDEBAR
+    ============================================================ */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-height: 100vh;
+      background-color: var(--dark-brown);
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.015) 2px, rgba(255,255,255,0.015) 4px),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Crect width='6' height='6' fill='%234a3220'/%3E%3Ccircle cx='1' cy='1' r='0.6' fill='%237a5c3e18'/%3E%3C/svg%3E");
+      border-right: 3px double var(--gold);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      transition: transform var(--transition);
+    }
+
+    .sidebar-crest {
+      padding: 28px 20px 20px;
+      text-align: center;
+      border-bottom: 2px solid var(--brown);
+    }
+
+    .crest-emblem {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 12px;
+      background: var(--gold);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 3px var(--brown), 0 0 0 5px var(--gold);
+    }
+
+    .crest-emblem-inner {
+      width: 52px;
+      height: 52px;
+      background: var(--dark-brown);
+      clip-path: polygon(50% 5%, 95% 27%, 95% 73%, 50% 95%, 5% 73%, 5% 27%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: var(--gold);
+      font-family: var(--font-display);
+    }
+
+    .sidebar-club-name {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gold-light);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      line-height: 1.3;
+    }
+
+    .sidebar-est {
+      font-family: var(--font-special);
+      font-size: 10px;
+      color: var(--tan);
+      margin-top: 4px;
+      letter-spacing: 3px;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 20px 0;
+    }
+
+    .nav-section-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--brown);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 16px 22px 6px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 22px;
+      color: var(--parchment);
+      text-decoration: none;
+      font-family: var(--font-head);
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: all var(--transition);
+      border-left: 3px solid transparent;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--gold-light);
+      background: rgba(200, 146, 42, 0.08);
+      border-left-color: var(--gold);
+    }
+
+    .nav-link i {
+      width: 16px;
+      height: 16px;
+      opacity: 0.7;
+    }
+
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 2px solid var(--brown);
+      text-align: center;
+    }
+
+    .sidebar-footer p {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--brown);
+      letter-spacing: 1px;
+      line-height: 1.6;
+    }
+
+    /* ============================================================
+       SEARCH
+    ============================================================ */
+    .search-container {
+      max-width: 600px;
+      margin: 0 auto 40px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--cream);
+      border: 2px solid var(--tan);
+      padding: 14px 20px 14px 45px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--ink);
+      transition: all 0.3s;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(200, 146, 42, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--brown);
+      opacity: 0.5;
+    }
+
+    /* ============================================================
+       MODAL
+    ============================================================ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--cream);
+      border: 4px solid var(--gold);
+      width: 100%;
+      max-width: 500px;
+      position: relative;
+      animation: modal-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes modal-pop {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+      background: var(--dark-brown);
+      padding: 16px 24px;
+      border-bottom: 2px solid var(--gold);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--gold-light);
+    }
+
+    .modal-header h4 {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 18px;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--gold);
+      cursor: pointer;
+      font-size: 24px;
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--brown);
+      margin-bottom: 8px;
+    }
+
+    .form-control {
+      width: 100%;
+      background: rgba(201, 185, 154, 0.1);
+      border: 1px solid var(--tan);
+      padding: 12px;
+      font-family: var(--font-body);
+      font-size: 14px;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--gold);
+      color: var(--dark-brown);
+      border: none;
+      padding: 14px;
+      font-family: var(--font-head);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 4px 4px 0 var(--dark-brown);
+    }
+
+    .btn-submit:hover {
+      background: var(--gold-light);
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 var(--dark-brown);
+    }
+
+    .btn-submit:active {
+      transform: translate(2px, 2px);
+      box-shadow: 0 0 0 var(--dark-brown);
+    }
+
+    /* ============================================================
+       BANNER
+    ============================================================ */
+    .banner {
+      background-color: var(--dark-brown);
+      background-image: 
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(200, 146, 42, 0.04) 10px, rgba(200, 146, 42, 0.04) 20px),
+        repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(0,0,0,0.04) 10px, rgba(0,0,0,0.04) 20px);
+      padding: 80px 60px;
+      text-align: center;
+      position: relative;
+      border-bottom: 6px double var(--gold);
+    }
+
+    .banner::before {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      width: 80px;
+      height: 80px;
+      border-top: 3px solid rgba(200, 146, 42, 0.5);
+      border-left: 3px solid rgba(200, 146, 42, 0.5);
+    }
+
+    .banner::after {
+      content: '';
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      width: 80px;
+      height: 80px;
+      border-bottom: 3px solid rgba(200, 146, 42, 0.5);
+      border-right: 3px solid rgba(200, 146, 42, 0.5);
+    }
+
+    .banner-title {
+      font-family: var(--font-display);
+      font-size: clamp(42px, 6vw, 78px);
+      font-weight: 900;
+      font-style: italic;
+      color: var(--gold-light);
+      line-height: 1.05;
+      text-shadow: 4px 4px 0px var(--dark-brown), 6px 6px 0px rgba(0,0,0,0.4);
+      margin-bottom: 10px;
+    }
+
+    .banner-title span {
+      display: block;
+      font-style: normal;
+      font-size: 0.35em;
+      font-family: var(--font-head);
+      letter-spacing: 12px;
+      color: var(--parchment);
+      text-shadow: none;
+      margin-top: 10px;
+    }
+
+    /* ============================================================
+       TICKER
+    ============================================================ */
+    .ticker-wrap {
+      background: var(--red);
+      border-top: 2px solid var(--gold);
+      border-bottom: 2px solid var(--gold);
+      overflow: hidden;
+      padding: 8px 0;
+    }
+
+    .ticker-inner {
+      display: flex;
+      gap: 0;
+      animation: ticker-scroll 40s linear infinite;
+      width: max-content;
+    }
+
+    @keyframes ticker-scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .ticker-item {
+      font-family: var(--font-head);
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--cream);
+      padding: 0 40px;
+      white-space: nowrap;
+    }
+
+    /* ============================================================
+       SECTIONS
+    ============================================================ */
+    section {
+      padding: 70px 60px;
+      position: relative;
+      border-bottom: 4px double var(--tan);
+    }
+
+    section:nth-child(even) {
+      background-color: var(--parchment);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--red);
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 900;
+      color: var(--dark-brown);
+    }
+
+    .section-title em {
+      color: var(--red);
+      font-style: italic;
+    }
+
+    /* ============================================================
+       RESOURCES / ACCORDION
+    ============================================================ */
+    .sem-accordion {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sem-item {
+      border: 2px solid var(--tan);
+      background: var(--cream);
+      overflow: hidden;
+    }
+
+    .sem-header {
+      width: 100%;
+      background: var(--dark-brown);
+      color: var(--gold-light);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      border: none;
+      transition: color 0.3s;
+    }
+
+    .sem-header:hover {
+      color: #fff;
+    }
+
+    .sem-header-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 900;
+      font-style: italic;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sem-content {
+      display: none;
+      padding: 24px;
+      border-top: 1px solid var(--tan);
+    }
+
+    .sem-item.active .sem-content {
+      display: block;
+    }
+
+    .subject-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .subject-card {
+      padding: 20px;
+      border: 1px solid rgba(201, 185, 154, 0.5);
+      background: rgba(232, 220, 200, 0.3);
+      transition: all 0.3s;
+    }
+
+    .subject-card:hover {
+      border-color: var(--brown);
+      transform: translateY(-2px);
+    }
+
+    .subject-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--dark-brown);
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+
+    .link-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn-link {
+      font-family: var(--font-head);
+      font-size: 10px;
+      letter-spacing: 1px;
+      padding: 6px 12px;
+      border: 1px solid var(--brown);
+      text-decoration: none;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s;
+    }
+
+    .btn-link:hover {
+      background: var(--brown);
+      color: var(--cream);
+    }
+
+    /* ============================================================
+       MOBILE & UTILS
+    ============================================================ */
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        transform: translateX(-100%);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .hamburger {
+        display: block !important;
+      }
+      section { padding: 40px 24px; }
+      .banner { padding: 60px 24px; }
+    }
+
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      z-index: 200;
+      background: var(--dark-brown);
+      border: 2px solid var(--gold);
+      color: var(--gold);
+      width: 42px;
+      height: 42px;
+      cursor: pointer;
+    }
+
+    .watermark {
+      position: absolute;
+      font-family: var(--font-display);
+      font-size: 180px;
+      font-weight: 900;
+      color: var(--tan);
+      opacity: 0.04;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-20deg);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Scroll animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease-out;
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- HAMBURGER -->
+  <button class="hamburger" id="hamburger">☰</button>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-crest">
+      <div class="crest-emblem">
+        <div class="crest-emblem-inner">EL</div>
+      </div>
+      <div class="sidebar-club-name">EL Resource<br>Lair</div>
+      <div class="sidebar-est">Est. 1987</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Navigate</div>
+      <a href="#hero" class="nav-link"><i data-lucide="home"></i> Home</a>
+      <a href="#about" class="nav-link"><i data-lucide="book-open"></i> About</a>
+      <a href="#resources" class="nav-link"><i data-lucide="graduation-cap"></i> Resources</a>
+      <a href="#faqs" class="nav-link"><i data-lucide="help-circle"></i> FAQs</a>
+      <div class="nav-section-label">Lair</div>
+      <a href="#connect" class="nav-link"><i data-lucide="mail"></i> Contact</a>
+    </nav>
+    <div class="sidebar-footer">
+      <p>✦ Knowledge & Preservation ✦<br>The EL Archive Project</p>
+    </div>
+  </aside>
+
+  <main style="flex:1; min-width:0;">
+    <!-- HERO -->
+    <header class="banner" id="hero">
+      <div style="font-family:var(--font-mono); font-size:10px; color:var(--tan); letter-spacing:6px; margin-bottom:12px;">
+        ELECTRICAL & ELECTRONICS — INDEPENDENT ARCHIVE
+      </div>
+      <h1 class="banner-title">
+        The Resource<br>Lair
+        <span>STUDENT INITIATIVE 1987-2026</span>
+      </h1>
+      <div style="color:var(--gold); font-size:24px; letter-spacing:12px; margin:20px 0;">⚜ &nbsp; ⚜ &nbsp; ⚜</div>
+      <p style="font-family:var(--font-special); color:var(--cream); max-width:600px; margin:0 auto; font-size:15px; opacity:0.85;">
+        A dedicated sanctuary for EL students. Providing reference texts, notes, and historical patterns for the pursuit of excellence.
+      </p>
+    </header>
+
+    <!-- TICKER -->
+    <div class="ticker-wrap">
+      <div class="ticker-inner">
+        <span class="ticker-item">S4 DIGITAL ELECTRONICS NOTES ADDED ✦ </span>
+        <span class="ticker-item">PREVIOUS YEAR QP BANK UPDATED ✦ </span>
+        <span class="ticker-item">NEW REFERENCE TEXTS FOR S2 MATHS ✦ </span>
+        <span class="ticker-item">S1-S4 ARCHIVE FULLY DIGITAL ✦ </span>
+        <span class="ticker-item">S4 DIGITAL ELECTRONICS NOTES ADDED ✦ </span>
+        <span class="ticker-item">PREVIOUS YEAR QP BANK UPDATED ✦ </span>
+        <span class="ticker-item">NEW REFERENCE TEXTS FOR S2 MATHS ✦ </span>
+        <span class="ticker-item">S1-S4 ARCHIVE FULLY DIGITAL ✦ </span>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="watermark">LAIR</div>
+      <div class="section-header reveal">
+        <span class="section-label">§ The Mission</span>
+        <h2 class="section-title">The <em>Genesis</em> of the Vault</h2>
+      </div>
+      <div style="max-width:800px; margin:0 auto;" class="reveal">
+        <p style="margin-bottom:20px;">
+          For years, official channels served as administrative hubs, but the academic thirst of the EL student required more. The <strong>EL Resource Lair</strong> was born out of a need for a centralized, friction-less repository—built by the community, for the community.
+        </p>
+        <blockquote style="border-left:4px solid var(--gold); padding:20px; background:rgba(200,146,42,0.08); font-family:var(--font-display); font-style:italic; font-size:18px;">
+          "Academic excellence is not an act, but a habit of accessing the right resources at the right time."
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- RESOURCES -->
+    <section id="resources">
+      <div class="section-header reveal">
+        <span class="section-label">§ Academic Vault</span>
+        <h2 class="section-title">Department <em>Resources</em></h2>
+      </div>
+
+      <!-- SEARCH BAR -->
+      <div class="search-container reveal">
+        <i data-lucide="search" class="search-icon"></i>
+        <input type="text" id="subject-search" class="search-input" placeholder="Filter by subject or semester name...">
+      </div>
+
+      <div class="sem-accordion reveal" id="resource-container">
+        <!-- SEM 1 -->
+        <div class="sem-item">
+          <button class="sem-header">
+            <span class="sem-header-title">Semester 1</span>
+            <i data-lucide="chevron-right"></i>
+          </button>
+          <div class="sem-content">
+            <div class="subject-grid">
+              <div class="subject-card">
+                <div class="subject-name">Linear Algebra & Calculus</div>
+                <div class="link-group" style="display:flex; flex-direction:column; gap:8px;">
+                  <a href="#" class="btn-link">
+                    <i data-lucide="book"></i> REFERENCE
+                  </a>
+                  <a href="#" class="btn-link">
+                    <i data-lucide="file-text"></i> NOTES
+                  </a>
+                  <a href="#" class="btn-link">
+                    <i data-lucide="download"></i> QP BANK
+                  </a>
+                </div>
+              </div>
+              <div class="subject-card">
+                <div class="subject-name">Engineering Physics A</div>
+                <div class="link-group" style="display:flex; flex-direction:column; gap:8px;">
+                  <a href="#" class="btn-link">
+                    <i data-lucide="book"></i> REFERENCE
+                  </a>
+                  <a href="#" class="btn-link">
+                    <i data-lucide="file-text"></i> NOTES
+                  </a>
+                  <a href="#" class="btn-link">
+                    <i data-lucide="download"></i> QP BANK
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:20px; text-align:right;">
+               <a href="#" class="btn-link" style="display:inline-flex;">SEM 1 SYLLABUS</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEM 2 -->
+        <div class="sem-item">
+          <button class="sem-header">
+            <span class="sem-header-title">Semester 2</span>
+            <i data-lucide="chevron-right"></i>
+          </button>
+          <div class="sem-content">
+            <div class="subject-grid">
+              <div class="subject-card">
+                <div class="subject-name">Vector Calc & Diff. Equations</div>
+                <div class="link-group" style="display:flex; flex-direction:column; gap:8px;">
+                  <a href="#" class="btn-link">
+                    <i data-lucide="book"></i> REFERENCE
+                  </a>
+                  <a href="#" class="btn-link">
+                    <i data-lucide="file-text"></i> NOTES
+                  </a>
+                  <a href="#" class="btn-link">
+                    <i data-lucide="download"></i> QP BANK
+                  </a>
+                </div>
+              </div>
+              <div class="subject-card">
+                <div class="subject-name">Engineering Chemistry</div>
+                <div class="link-group" style="display:flex; flex-direction:column; gap:8px;">
+                  <a href="#" class="btn-link">
+                    <i data-lucide="book"></i> REFERENCE
+                  </a>
+                  <a href="#" class="btn-link">
+                    <i data-lucide="file-text"></i> NOTES
+                  </a>
+                  <a href="#" class="btn-link">
+                    <i data-lucide="download"></i> QP BANK
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:20px; text-align:right;">
+               <a href="#" class="btn-link" style="display:inline-flex;">SEM 2 SYLLABUS</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEM 3 -->
+        <div class="sem-item">
+          <button class="sem-header">
+            <span class="sem-header-title">Semester 3</span>
+            <i data-lucide="chevron-right"></i>
+          </button>
+          <div class="sem-content">
+            <div class="subject-grid">
+              <div class="subject-card">
+                <div class="subject-name">PDE & Complex Analysis</div>
+                <div class="link-group" style="display:flex; flex-direction:column; gap:8px;">
+                  <a href="#" class="btn-link">
+                    <i data-lucide="book"></i> REFERENCE
+                  </a>
+                  <a href="#" class="btn-link">
+                    <i data-lucide="file-text"></i> NOTES
+                  </a>
+                  <a href="#" class="btn-link">
+                    <i data-lucide="download"></i> QP BANK
+                  </a>
+                </div>
+              </div>
+              <div class="subject-card">
+                <div class="subject-name">Circuits & Networks</div>
+                <div class="link-group" style="display:flex; flex-direction:column; gap:8px;">
+                  <a href="#" class="btn-link">
+                    <i data-lucide="book"></i> REFERENCE
+                  </a>
+                  <a href="#" class="btn-link">
+                    <i data-lucide="file-text"></i> NOTES
+                  </a>
+                  <a href="#" class="btn-link">
+                    <i data-lucide="download"></i> QP BANK
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:20px; text-align:right;">
+               <a href="#" class="btn-link" style="display:inline-flex;">SEM 3 SYLLABUS</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEM 4 -->
+        <div class="sem-item">
+          <button class="sem-header">
+            <span class="sem-header-title">Semester 4</span>
+            <i data-lucide="chevron-right"></i>
+          </button>
+          <div class="sem-content">
+            <div class="subject-grid">
+              <div class="subject-card">
+                <div class="subject-name">Digital Electronics</div>
+                <div class="link-group" style="display:flex; flex-direction:column; gap:8px;">
+                  <a href="#" class="btn-link">
+                    <i data-lucide="book"></i> REFERENCE
+                  </a>
+                  <a href="#" class="btn-link">
+                    <i data-lucide="file-text"></i> NOTES
+                  </a>
+                  <a href="#" class="btn-link">
+                    <i data-lucide="download"></i> QP BANK
+                  </a>
+                </div>
+              </div>
+              <div class="subject-card">
+                <div class="subject-name">Numerical Methods & Prob</div>
+                <div class="link-group" style="display:flex; flex-direction:column; gap:8px;">
+                  <a href="#" class="btn-link">
+                    <i data-lucide="book"></i> REFERENCE
+                  </a>
+                  <a href="#" class="btn-link">
+                    <i data-lucide="file-text"></i> NOTES
+                  </a>
+                  <a href="#" class="btn-link">
+                    <i data-lucide="download"></i> QP BANK
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:20px; text-align:right;">
+               <a href="#" class="btn-link" style="display:inline-flex;">SEM 4 SYLLABUS</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQs -->
+    <section id="faqs">
+      <div class="section-header reveal">
+        <span class="section-label">§ Clarity</span>
+        <h2 class="section-title">Common <em>Inquiries</em></h2>
+      </div>
+      <div style="max-width:700px; margin:0 auto;" class="reveal">
+        <div style="margin-bottom:30px;">
+          <h4 style="font-family:var(--font-display); font-weight:700; color:var(--dark-brown);">Where can I find the latest updates?</h4>
+          <p style="font-size:14px; opacity:0.8;">The Lair is updated at the start of each semester. Major changes are announced in department circles.</p>
+        </div>
+        <div style="margin-bottom:30px;">
+          <h4 style="font-family:var(--font-display); font-weight:700; color:var(--dark-brown);">Are these resources the only ones?</h4>
+          <p style="font-size:14px; opacity:0.8;">These are curated selections. We recommend following official lectures for the most accurate curriculum.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONNECT -->
+    <section id="connect" style="background:var(--dark-brown); color:var(--parchment); text-align:center;">
+       <div class="reveal">
+         <span style="font-family:var(--font-mono); font-size:10px; color:var(--tan); letter-spacing:4px;">§ CONTRIBUTION</span>
+         <h2 style="font-family:var(--font-display); font-size:42px; font-weight:900; color:var(--gold-light); margin:12px 0;">Join the <em style="color:var(--cream)">Archive Initiative</em></h2>
+         <p style="max-width:500px; margin:0 auto 32px; font-size:14px; opacity:0.8;">Have notes or papers we missed? Help the community by contributing to the Lair.</p>
+         <button id="open-feedback" style="background:var(--gold); color:var(--dark-brown); padding:16px 36px; font-family:var(--font-head); font-size:13px; text-decoration:none; border:3px solid var(--gold-light); cursor:pointer;">SUBMIT RESOURCE / BUG REPORT</button>
+       </div>
+    </section>
+
+    <!-- FEEDBACK MODAL -->
+    <div class="modal-overlay" id="feedback-modal">
+      <div class="modal">
+        <div class="modal-header">
+          <h4>Communications Center</h4>
+          <button class="modal-close" id="close-feedback">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="feedback-form">
+            <div class="form-group">
+              <label class="form-label">Type</label>
+              <select class="form-control" id="feedback-type">
+                <option value="suggestion">Resource Suggestion</option>
+                <option value="bug">Report Technical Bug</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Identification</label>
+              <input type="text" class="form-control" placeholder="Your name (Optional)">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Detailed Message</label>
+              <textarea class="form-control" rows="4" style="resize:none;" placeholder="How can the archive be improved?"></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Dispatch Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer style="background:var(--black); color:var(--tan); padding:40px 60px; font-size:11px; text-align:center;">
+      <div style="margin-bottom:20px; color:var(--gold);">⚜ &nbsp; EL RESOURCE LAIR &nbsp; ⚜</div>
+      <p style="font-family:var(--font-mono); letter-spacing:1px; opacity:0.5;">
+        &copy; 2026 THE EL RESOURCE LAIR — INDEPENDENT PROJECT — ALL RIGHTS RESERVED
+      </p>
+      <p style="margin-top:12px; font-family:var(--font-special);">KNOWLEDGE · PRESERVATION · EXCELLENCE</p>
+    </footer>
+  </main>
+</div>
+
+<script>
+  // Initialize Lucide Icons
+  lucide.createIcons();
+
+  // Sidebar Toggle
+  const hamburger = document.getElementById('hamburger');
+  const sidebar = document.getElementById('sidebar');
+  hamburger.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    hamburger.textContent = sidebar.classList.contains('open') ? '✕' : '☰';
+  });
+
+  // Accordion Logic
+  const headers = document.querySelectorAll('.sem-header');
+  headers.forEach(header => {
+    header.addEventListener('click', () => {
+      const item = header.parentElement;
+      const isActive = item.classList.contains('active');
+      
+      // Close others
+      document.querySelectorAll('.sem-item').forEach(i => i.classList.remove('active'));
+      document.querySelectorAll('.sem-header i').forEach(i => {
+        i.setAttribute('data-lucide', 'chevron-right');
+      });
+
+      if (!isActive) {
+        item.classList.add('active');
+        header.querySelector('i').setAttribute('data-lucide', 'chevron-down');
+      }
+      
+      lucide.createIcons();
+    });
+  });
+
+  // Scroll Reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Search Logic
+  const searchInput = document.getElementById('subject-search');
+  searchInput.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase();
+    const semItems = document.querySelectorAll('.sem-item');
+    
+    semItems.forEach(item => {
+      const semTitle = item.querySelector('.sem-header-title').textContent.toLowerCase();
+      const subjects = item.querySelectorAll('.subject-card');
+      let semHasMatch = semTitle.includes(query);
+      let subjectsProcessed = 0;
+      let matchesInSubjects = 0;
+
+      subjects.forEach(sub => {
+        const subName = sub.querySelector('.subject-name').textContent.toLowerCase();
+        if (subName.includes(query) || semHasMatch) {
+          sub.style.display = 'block';
+          matchesInSubjects++;
+        } else {
+          sub.style.display = 'none';
+        }
+      });
+
+      if (semHasMatch || matchesInSubjects > 0) {
+        item.style.display = 'block';
+        if (query.length > 0) {
+          item.classList.add('active');
+          const icon = item.querySelector('.sem-header i');
+          if (icon) icon.setAttribute('data-lucide', 'chevron-down');
+          lucide.createIcons();
+        }
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  });
+
+  // Modal Logic
+  const feedbackModal = document.getElementById('feedback-modal');
+  const openFeedbackBtn = document.getElementById('open-feedback');
+  const closeFeedbackBtn = document.getElementById('close-feedback');
+  const feedbackForm = document.getElementById('feedback-form');
+
+  openFeedbackBtn.addEventListener('click', () => {
+    feedbackModal.classList.add('active');
+  });
+
+  closeFeedbackBtn.addEventListener('click', () => {
+    feedbackModal.classList.remove('active');
+  });
+
+  feedbackModal.addEventListener('click', (e) => {
+    if (e.target === feedbackModal) feedbackModal.classList.remove('active');
+  });
+
+  feedbackForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    alert('Message dispatched to the Archive Initiative. Thank you for your vigilance.');
+    feedbackModal.classList.remove('active');
+    feedbackForm.reset();
+  });
+</script>
+
+</body>
+</html>
