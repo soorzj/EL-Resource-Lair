@@ -1,4 +1,15 @@
-# ⚜ EL Resource Lair — Academic Archive ⚜
+<div align="center">
+<h1>⚜ EL Resource Lair — Academic Archive ⚜
+   
+<br>
+<p> </p>
+🚧 <img
+      src="https://img.shields.io/badge/Under-construction-yellow"
+      alt="Portfolio" 
+   width= 20%
+    /> 🚧
+       <br>
+</div>
 
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
